@@ -2,6 +2,8 @@ const userModel = require('../models/user')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 
+const secret = "hashthisplzz"
+
 module.exports.createUser = (req, res) => {
 
     if (!req.body.name) {
@@ -94,5 +96,34 @@ module.exports.getAllUsers = (req, res) => {
         .catch(err => {
             res.json(err)
         })
+
+}
+
+
+module.exports.login = (req,res) => {
+
+    if(!req.body.email){
+        res.send('Campos obrigatórios estão vazios')
+    }
+
+    if(!req.body.password){
+        res.send('Campos obrigatórios estão vazios')
+    }
+
+    userModel.findOne({email: req.body.email},(error, userFound) => {
+        if(!userFound){
+            res.send('Usuário não encontrado')
+            return
+        }
+        if(bcrypt.compareSync(req.body.password, userFound.password)){
+            res.json({
+                token: jwt.sign({user: userFound}, secret),
+                email: userFound.email
+            })
+            res.send('Senhas batem e token foi criado')
+        }else{
+            res.send('Senha incorreta')
+        }
+    })
 
 }

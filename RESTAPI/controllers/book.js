@@ -16,8 +16,8 @@ module.exports.getAllBooks = (req,res) => {
 
 module.exports.createNewBook = (req,res) => {
 
-    if(!req.body.name){
-        res.send("O novo livro da biblioteca precisa de um nome")
+    if(!req.body.title){
+        res.send("O novo livro da biblioteca precisa de um título")
     }
 
     if(!req.body.author){
@@ -34,7 +34,7 @@ module.exports.createNewBook = (req,res) => {
 
     let newBook = new bookModel();
     
-    newBook.name = req.body.name
+    newBook.title = req.body.title
     newBook.publishing_company = req.body.publishing_company
     newBook.author = req.body.author
     newBook.genre = req.body.genre

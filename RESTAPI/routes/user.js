@@ -5,11 +5,15 @@ const userController = require("../controllers/user")
 
 // Cria um novo usuário 
 
-router.post('/user', userController.createUser)
+router.post('/singup', userController.createUser)
 
 // Faz uma requisição de todos os usuarios
 
 router.get('/user/all', userController.getAllUsers)
+
+//Faz uma requisição de login
+
+router.get('/login', userController.login)
 
 // Faz uma requisição pelo Objeto User
 router.get('/user', userController.getUser)

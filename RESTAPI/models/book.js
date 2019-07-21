@@ -3,7 +3,7 @@ const mongoose = require('mongoose')
 
 let bookSchema = new mongoose.Schema({
 
-    name: {
+    title: {
         type: String,
         required: true,
         unique: true
