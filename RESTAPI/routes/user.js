@@ -1,27 +1,28 @@
 // Roteamento de funcionalidades do Objeto usuário
-
 const express = require('express')
 const router = express.Router()
+const userController = require("../controllers/user")
+
+// Cria um novo usuário 
+
+router.post('/user', userController.createUser)
+
+// Faz uma requisição de todos os usuarios
+
+router.get('/user/all', userController.getAllUsers)
 
 // Faz uma requisição pelo Objeto User
-router.get('/user', (req, res) => {
-    if (req.query.name) {
-        res.send(`You have requested a user ${req.query.name}`)
-    } else {
-        res.send('You have requested a user')
-    }
-
-})
-
-// Faz uma requisição pelo nome de uma pessoa
-router.get('/user/:name', (req, res) => {
-    res.send(`You have requested a user ${req.params.name}`)
-})
+router.get('/user', userController.getUser)
 
 
-router.get('/error', (req, res) => {
-    throw new Error("Isto é um erro")
+// UPDATE router pelo email
 
-})
+router.put('/user', userController.updateUserEmail)
+
+
+// DELETE router by email
+
+router.delete('/user', userController.deleteUser)
+
 
 module.exports = router

@@ -1,13 +1,15 @@
 const express = require("express")
 const bodyParser = require('body-parser')
+const mongoose = require('mongoose')
+
+mongoose.connect('mongodb+srv://admin:admin@mockcluster-zet4a.mongodb.net/test?retryWrites=true', { useNewUrlParser: true, useCreateIndex: true, useFindAndModify: false })
+
 
 const app = express()
 
 const PORT = process.env.PORT || 3000
 
 const userRoute = require('./routes/user')
-const costumerRoute = require('./routes/customer')
-const jokeRoute = require('./routes/jokes')
 
 let path = require('path')
 
@@ -19,8 +21,6 @@ app.use((req, res, next) => {
 })
 
 app.use(userRoute)
-app.use(costumerRoute)
-app.use(jokeRoute)
 app.use(express.static('public'))
 
 //Requisição de erro (404 error handler)
