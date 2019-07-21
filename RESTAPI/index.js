@@ -10,6 +10,7 @@ const app = express()
 const PORT = process.env.PORT || 3000
 
 const userRoute = require('./routes/user')
+const bookRoute = require('./routes/book')
 
 let path = require('path')
 
@@ -21,6 +22,7 @@ app.use((req, res, next) => {
 })
 
 app.use(userRoute)
+app.use(bookRoute)
 app.use(express.static('public'))
 
 //Requisição de erro (404 error handler)
