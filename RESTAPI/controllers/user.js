@@ -4,7 +4,7 @@ const jwt = require('jsonwebtoken')
 
 const secret = "hashthisplzz"
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = async (req, res) => {
 
     if (!req.body.name) {
         res.send('Campo obrigatório está vazio')
@@ -25,19 +25,15 @@ module.exports.createUser = (req, res) => {
     newUser.password = hashedPass
     newUser.name = req.body.name
 
-    newUser.save()
-        .then(doc => {
-            if (!doc || doc.length === 0) {
-                return res.status(500).send(doc)
-            }
+    const userCreated = await newUser.save()
+    
+    if(!userCreated){
+        res.send('O usuário não pode ser cadastrado')
+        return;
+    }
 
-
-            return res.status(201).send(doc)
-
-        })
-        .catch(err => {
-            res.status(500).json(err)
-        })
+    res.json(userCreated)
+    
 }
 
 
@@ -50,22 +46,23 @@ module.exports.getUser = (req, res) => {
 
 }
 
-module.exports.updateUserEmail = (req, res) => {
+module.exports.updateUserEmail = async (req, res) => {
     if (!req.query.email) {
         return res.status(400).send("Não foi possível atualizar, pois está faltando o email")
     }
 
-    userModel.findByIdAndUpdate({
+    const userUpdated = await userModel.findByIdAndUpdate({
             email: req.query.email
         }, req.body, {
             new: true
         })
-        .then(doc => {
-            res.json(doc)
-        })
-        .catch(err => {
-            res.status(500).json(err)
-        })
+        
+        if(!userUpdated){
+            res.status(500).send("A atualização de dados deu errado")
+            return
+        }
+
+        res.json(userUpdated)
 
 }
 
@@ -87,15 +84,17 @@ module.exports.deleteUser = (req, res) => {
 
 
 
-module.exports.getAllUsers = (req, res) => {
+module.exports.getAllUsers = async (req, res) => {
 
-    userModel.find()
-        .then(doc => {
-            res.json(doc)
-        })
-        .catch(err => {
-            res.json(err)
-        })
+    const allUsers = await userModel.find()
+    
+    if(!allUsers){
+
+        res.send('Não há nenhum usuário cadastrado')
+        return
+    }
+
+    res.json(allUsers)
 
 }
 
@@ -113,14 +112,14 @@ module.exports.login = (req,res) => {
     userModel.findOne({email: req.body.email},(error, userFound) => {
         if(!userFound){
             res.send('Usuário não encontrado')
-            return
+            return error
         }
         if(bcrypt.compareSync(req.body.password, userFound.password)){
             res.json({
                 token: jwt.sign({user: userFound}, secret),
                 email: userFound.email
             })
-            res.send('Senhas batem e token foi criado')
+        
         }else{
             res.send('Senha incorreta')
         }

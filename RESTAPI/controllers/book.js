@@ -2,19 +2,14 @@
 
 const bookModel = require('../models/book')
 
-module.exports.getAllBooks = (req,res) => {
+module.exports.getAllBooks = async (req,res) => {
 
-    bookModel.find()
-    .then(doc => {
-        res.json(doc)
-    })
-    .catch(err => {
-        res.json(err)
-    })
-
+   const books = await bookModel.find()
+    
+    res.json(books)
 }
 
-module.exports.createNewBook = (req,res) => {
+module.exports.createNewBook = async (req,res) => {
 
     if(!req.body.title){
         res.send("O novo livro da biblioteca precisa de um título")
@@ -39,18 +34,13 @@ module.exports.createNewBook = (req,res) => {
     newBook.author = req.body.author
     newBook.genre = req.body.genre
 
-    newBook.save()
-        .then(doc => {
-            if(!doc || doc.length === 0){
-                return res.status(500).send(doc)
-            }
+    const bookCreated = await newBook.save()
+        
+    if(!bookCreated){
+        res.send('Um erro aconteceu ao colocar um novo livro na biblioteca')
+    }
 
-            return res.status(201).send(doc)
-            
-        })
-        .catch(err => {
-            res.status(500).json(err)
-        })
+    res.json(bookCreated)
 
 }
 
