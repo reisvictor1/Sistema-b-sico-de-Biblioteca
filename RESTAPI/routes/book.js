@@ -8,5 +8,6 @@ router.get('/book', bookController.getAllBooks)
 
 router.post('/book', bookController.createNewBook)
 
+router.delete('/book',bookController.deleteBook)
 
 module.exports = router

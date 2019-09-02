@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const book = require('./book')
 
 let booksAvailableSchema = new mongoose.Schema({
 

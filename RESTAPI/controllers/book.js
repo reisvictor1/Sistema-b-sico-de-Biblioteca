@@ -37,10 +37,27 @@ module.exports.createNewBook = async (req,res) => {
     const bookCreated = await newBook.save()
         
     if(!bookCreated){
-        res.send('Um erro aconteceu ao colocar um novo livro na biblioteca')
+        res.status(400).send('Um erro aconteceu ao colocar um novo livro na biblioteca')
     }
 
     res.json(bookCreated)
 
 }
 
+module.exports.deleteBook = async (req,res) => {
+
+    if(!req.query.title){
+        res.status(400).send("Campo obrigatório está vazio")
+    }
+
+    const bookRemoved = await bookModel.findByIdAndRemove({
+        title: req.query.title
+    })
+
+    if(!bookRemoved){
+        res.status(400).send("O livro não pôde ser removido")
+    }
+
+    res.json(bookRemoved)
+
+}

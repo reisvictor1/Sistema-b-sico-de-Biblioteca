@@ -7,7 +7,7 @@ mongoose.connect('mongodb+srv://admin:admin@mockcluster-zet4a.mongodb.net/test?r
 
 const app = express()
 
-const PORT = process.env.PORT || 3000
+const PORT = process.env.PORT || 4000
 
 const userRoute = require('./routes/user')
 const bookRoute = require('./routes/book')
@@ -15,11 +15,6 @@ const bookRoute = require('./routes/book')
 let path = require('path')
 
 app.use(bodyParser.json())
-
-app.use((req, res, next) => {
-    console.log(`${new Date().toString()} => ${req.originalUrl}`, req.body)
-    next();
-})
 
 app.use(userRoute)
 app.use(bookRoute)
